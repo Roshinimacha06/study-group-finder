@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Study Group Finder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#14213D;--bg:#F2F5FB;--card:#fff;--line:#D9E0EE;--accent:#2F4BFF;--onacc:#fff;--muted:#5A6786;--ok:#0E7A52;--warn:#A85A00;--bad:#B63A2E;--soft:#E8EDFB;--hi:#FFE066;
+ box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#E8EDFB;--bg:#0E1424;--card:#161E33;--line:#27324F;--accent:#8497FF;--onacc:#0E1424;--muted:#9AA7C7;--ok:#4CD39A;--warn:#F0A74A;--bad:#FF8A7D;--soft:#1F2945}}
+:root[data-theme="dark"]{--ink:#E8EDFB;--bg:#0E1424;--card:#161E33;--line:#27324F;--accent:#8497FF;--onacc:#0E1424;--muted:#9AA7C7;--ok:#4CD39A;--warn:#F0A74A;--bad:#FF8A7D;--soft:#1F2945}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 "DM Sans",system-ui,sans-serif}
+h1,h2,h3{font-family:"Bricolage Grotesque","DM Sans",sans-serif;margin:0;line-height:1.15}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 18px}
+header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 0}
+.logo{font:800 22px "Bricolage Grotesque",sans-serif}
+.logo span{background:linear-gradient(transparent 55%,var(--hi) 55%,var(--hi) 92%,transparent 92%);color:var(--ink);padding:0 3px}
+.btn{border:1.5px solid var(--ink);background:transparent;border-radius:10px;padding:8px 14px;cursor:pointer;font-weight:700;min-height:40px}
+.btn.p{background:var(--accent);border-color:var(--accent);color:var(--onacc)}
+.btn.g{border-color:var(--line)}
+.btn.sm{padding:5px 10px;min-height:32px;font-size:14px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.who{display:flex;align-items:center;gap:10px;font-size:14px}
+.av{width:34px;height:34px;border-radius:50%;background:var(--soft);display:inline-grid;place-items:center;font-weight:700;font-size:13px;flex:none}
+.hero{padding:18px 0 8px}
+.hero h1{font-size:clamp(30px,6vw,52px);font-weight:800;max-width:14em}
+.hero p{color:var(--muted);max-width:34em;margin:10px 0 0}
+.bar{display:grid;grid-template-columns:1fr;gap:10px;margin:20px 0 10px}
+.bar .row{display:flex;flex-wrap:wrap;gap:8px}
+.in,select.in,textarea.in{width:100%;background:var(--card);border:1.5px solid var(--line);border-radius:10px;padding:9px 12px;min-height:42px}
+.bar select.in{width:auto;flex:1 1 130px}
+.chk{display:flex;align-items:center;gap:6px;font-size:14px;padding:0 6px}
+.tabs{display:flex;gap:6px;margin:14px 0 6px;border-bottom:1.5px solid var(--line)}
+.tab{background:none;border:0;padding:8px 14px;cursor:pointer;font-weight:700;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-1.5px}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.meta{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:10px 0;color:var(--muted);font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px;padding-bottom:50px}
+.card{background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:16px;cursor:pointer;display:flex;flex-direction:column;gap:8px;text-align:left}
+.card:hover{border-color:var(--accent)}
+.card h3{font-size:19px}
+.card p{margin:0;color:var(--muted);font-size:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.chip{display:inline-block;background:var(--soft);border-radius:999px;padding:2px 10px;font-size:12.5px;font-weight:700}
+.chip.ok{color:var(--ok)}.chip.warn{color:var(--warn)}.chip.bad{color:var(--bad)}
+.line{display:flex;gap:8px;align-items:flex-start;font-size:14px}
+.card .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted);padding-top:6px;border-top:1px solid var(--line)}
+.empty{grid-column:1/-1;text-align:center;padding:50px 10px;color:var(--muted)}
+.ov{position:fixed;inset:0;background:rgba(10,15,30,.6);display:none;align-items:flex-end;justify-content:center;z-index:10}
+.ov.on{display:flex}
+.sheet{background:var(--bg);width:100%;max-width:620px;max-height:92%;overflow:auto;border-radius:18px 18px 0 0;padding:20px 20px calc(24px + env(safe-area-inset-bottom,0px))}
+@media(min-width:700px){.ov{align-items:center}.sheet{border-radius:18px;max-height:90%}}
+.sheet h2{font-size:26px;margin-bottom:4px}
+.sec{background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:14px;margin-top:12px}
+.sec h3{font-size:16px;margin-bottom:8px}
+.x{float:right}
+label{display:block;font-size:14px;font-weight:700;margin:10px 0 4px}
+.days{display:flex;flex-wrap:wrap;gap:6px}
+.days label{display:inline-flex;margin:0;gap:4px;font-weight:500;border:1.5px solid var(--line);border-radius:8px;padding:4px 10px;background:var(--card)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mem{display:flex;align-items:center;gap:10px;padding:6px 0}
+.req{border-top:1px solid var(--line);padding:10px 0}
+.methods{display:flex;flex-wrap:wrap;gap:8px}
+.methods .btn[aria-pressed="true"]{background:var(--accent);color:var(--onacc);border-color:var(--accent)}
+.invite{display:flex;gap:8px}
+.note{font-size:13px;color:var(--muted);margin:8px 0 0}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-weight:700;z-index:20;display:none}
+a{color:var(--accent)}
+.bell{position:relative}.dot{background:var(--bad);color:#fff;border-radius:999px;font-size:11px;font-weight:700;padding:0 6px;margin-left:4px}
+.nt{display:block;width:100%;text-align:left;padding:12px 4px;border:0;border-top:1px solid var(--line);background:none;cursor:pointer}
+.nt.u{font-weight:700}.nt small{display:block;font-weight:400;color:var(--muted)}
+@media(prefers-reduced-motion:no-preference){.sheet{animation:up .18s ease-out}@keyframes up{from{transform:translateY(14px);opacity:.4}}}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <header class="top">
+  <div class="logo">Study <span>Group</span> Finder</div>
+  <div id="auth"></div>
+ </header>
+ <section class="hero">
+  <h1>Find people to study with, or start your own group.</h1>
+  <p>Browse groups by subject, day and place. Request to join and the group leader approves you.</p>
+ </section>
+ <div class="bar">
+  <input id="q" class="in" type="search" placeholder="Search by topic, subject, venue or leader" aria-label="Search groups">
+  <div class="row">
+   <select id="fs" class="in" aria-label="Subject"></select>
+   <select id="fd" class="in" aria-label="Day"></select>
+   <select id="fm" class="in" aria-label="Format"><option value="">Any format</option><option>In person</option><option>Online</option></select>
+   <select id="fo" class="in" aria-label="Sort"><option value="new">Newest first</option><option value="seats">Most open seats</option><option value="az">Title A to Z</option></select>
+   <label class="chk"><input type="checkbox" id="fa"> Has open seats</label>
+  </div>
+ </div>
+ <div class="tabs" role="tablist">
+  <button class="tab" role="tab" data-act="tab" data-v="all" aria-selected="true">Discover</button>
+  <button class="tab" role="tab" data-act="tab" data-v="mine" aria-selected="false">My groups</button>
+ </div>
+ <div class="meta"><span id="count"></span><button class="btn p" data-act="create">Create a group</button></div>
+ <main class="grid" id="grid"></main>
+</div>
+<div class="ov" id="ov" role="dialog" aria-modal="true"><div class="sheet" id="sheet"></div></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const KEY='sgf-v1',SUBJ=['Mathematics','Physics','Chemistry','Biology','Computer Science','Engineering','Economics','Business','Languages','Medicine','Law','Other'],DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=t=>{if(!t)return'';const[h,m]=t.split(':').map(Number);return((h+11)%12+1)+':'+String(m).padStart(2,'0')+' '+(h<12?'AM':'PM')};
+const ini=n=>(n||'?').split(/\s+/).slice(0,2).map(w=>w[0]).join('').toUpperCase();
+const M=(n,e,c,y,s)=>({name:n,email:e,course:c,year:y,msg:'',status:s||'approved'});
+const seed=()=>[
+{id:'g1',title:'Calculus II problem sets',subject:'Mathematics',desc:'Weekly walk-through of integration techniques and series. Bring the problem set and we solve it at the whiteboard.',days:['Tue','Thu'],start:'17:30',end:'19:00',mode:'In person',location:'Central Library, Room 204, Hyderabad',cap:8,created:6,creator:{name:'Aarav Mehta',email:'aarav@campus.edu',course:'B.Tech Mechanical',year:'2nd year',bio:'Was a TA for Calculus I. Happy to explain, not just solve.'},members:[M('Sneha Rao','sneha@campus.edu','B.Sc Physics','1st year'),M('Kiran Das','kiran@campus.edu','B.Tech Civil','2nd year')]},
+{id:'g2',title:'Data structures interview prep',subject:'Computer Science',desc:'Two LeetCode-style problems per session, then we explain our solutions to each other.',days:['Sat'],start:'10:00',end:'12:00',mode:'Online',location:'https://meet.example.com/dsa-prep',cap:6,created:5,creator:{name:'Nisha Verma',email:'nisha@campus.edu',course:'B.Tech CSE',year:'3rd year',bio:'Interning at a product startup this summer.'},members:[M('Rohit Jain','rohit@campus.edu','B.Tech IT','3rd year'),M('Meera Iyer','meera@campus.edu','B.Tech CSE','2nd year'),M('Dev Patel','dev@campus.edu','BCA','3rd year'),M('Anya Roy','anya@campus.edu','B.Tech CSE','3rd year'),M('Tarun S','tarun@campus.edu','B.Tech ECE','3rd year'),M('Zoya K','zoya@campus.edu','B.Tech CSE','2nd year')].slice(0,5)},
+{id:'g3',title:'Organic chemistry reaction mechanisms',subject:'Chemistry',desc:'Drawing mechanisms from memory, then checking each other. Good for first-time Orgo students.',days:['Mon','Wed'],start:'19:00',end:'20:30',mode:'In person',location:'Science Block cafeteria, Hyderabad',cap:6,created:4,creator:{name:'Priya Nair',email:'priya@campus.edu',course:'B.Sc Chemistry',year:'3rd year',bio:'Tutoring Orgo for two semesters.'},members:[M('Imran Khan','imran@campus.edu','B.Sc Chemistry','2nd year')]},
+{id:'g4',title:'Microeconomics exam revision',subject:'Economics',desc:'Past papers, graphs and elasticity drills. We rotate who teaches each topic.',days:['Fri'],start:'16:00',end:'17:30',mode:'Online',location:'https://meet.example.com/micro-rev',cap:10,created:3,creator:{name:'Rahul Sharma',email:'rahul@campus.edu',course:'BBA',year:'2nd year',bio:'Aiming for first class honours.'},members:[M('Lata M','lata@campus.edu','BBA','2nd year'),M('Omar F','omar@campus.edu','B.Com','2nd year')]},
+{id:'g5',title:'Anatomy flashcard circle',subject:'Medicine',desc:'Spaced-repetition sessions on the musculoskeletal system, with quick quizzes at the end.',days:['Sun'],start:'09:30',end:'11:00',mode:'In person',location:'Medical College Library, Hyderabad',cap:5,created:2,creator:{name:'Fatima Sheikh',email:'fatima@campus.edu',course:'MBBS',year:'1st year',bio:'Makes the flashcards, shares the deck.'},members:[M('A Reddy','areddy@campus.edu','MBBS','1st year'),M('J Thomas','jt@campus.edu','MBBS','1st year'),M('P Singh','psingh@campus.edu','MBBS','1st year'),M('K Rao','krao@campus.edu','MBBS','1st year')]},
+{id:'g6',title:'Spoken Spanish conversation hour',subject:'Languages',desc:'Beginner to intermediate. We pick a topic each week and talk, no textbooks.',days:['Wed'],start:'18:00',end:'19:00',mode:'Online',location:'https://meet.example.com/hola',cap:12,created:1,creator:{name:'Lucas Pereira',email:'lucas@campus.edu',course:'B.A. Languages',year:'4th year',bio:'Spent a year abroad in Madrid.'},members:[M('Ishaan B','ishaan@campus.edu','B.A. English','2nd year')]}
+];
+let S={user:null,groups:null,notes:[],tab:'all'};
+try{const r=JSON.parse(localStorage.getItem(KEY)||'null');if(r){S.user=r.user;S.groups=r.groups;S.notes=r.notes||[]}}catch(e){}
+if(!S.groups)S.groups=seed();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify({user:S.user,groups:S.groups,notes:S.notes}))}catch(e){}};
+const seats=g=>g.cap-1-g.members.filter(m=>m.status==='approved').length;
+const isLead=g=>S.user&&g.creator.email===S.user.email;
+const myMem=g=>S.user&&g.members.find(m=>m.email===S.user.email);
+const myNotes=()=>S.user?S.notes.filter(n=>n.to===S.user.email):[];
+const unread=()=>myNotes().filter(n=>!n.read).length;
+const notify=(to,text,gid)=>{S.notes.unshift({id:Date.now()+Math.random(),to,text,gid,at:Date.now(),read:false})};
+const ago=t=>{const m=Math.round((Date.now()-t)/60000);return m<1?'Just now':m<60?m+' min ago':m<1440?Math.round(m/60)+' h ago':Math.round(m/1440)+' d ago'};
+const toast=t=>{const e=$('#toast');e.textContent=t;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',2600)};
+const inviteLink=g=>location.href.split('#')[0]+'#g='+g.id;
+const mapLink=q=>'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(q);
+const isUrl=s=>/^https?:\/\//.test(s);
+const when=g=>g.days.join(', ')+' · '+fmt(g.start)+' to '+fmt(g.end);
+
+function auth(){$('#auth').innerHTML=S.user?`<div class="who"><button class="btn g sm bell" data-act="bell" aria-label="Notifications, ${unread()} unread">🔔${unread()?`<span class="dot">${unread()}</span>`:''}</button><span class="av">${esc(ini(S.user.name))}</span><span>${esc(S.user.name)}</span><button class="btn g sm" data-act="signout">Sign out</button></div>`:`<button class="btn p" data-act="signin">Sign in</button>`}
+
+function list(){
+ const q=$('#q').value.trim().toLowerCase(),s=$('#fs').value,d=$('#fd').value,m=$('#fm').value,o=$('#fo').value,av=$('#fa').checked;
+ let a=S.groups.filter(g=>{
+  if(S.tab==='mine'&&!(isLead(g)||myMem(g)))return false;
+  if(q&&!(g.title+' '+g.subject+' '+g.desc+' '+g.location+' '+g.creator.name).toLowerCase().includes(q))return false;
+  if(s&&g.subject!==s)return false;if(d&&!g.days.includes(d))return false;if(m&&g.mode!==m)return false;if(av&&seats(g)<=0)return false;return true});
+ a.sort((x,y)=>o==='seats'?seats(y)-seats(x):o==='az'?x.title.localeCompare(y.title):y.created-x.created);
+ $('#count').textContent=a.length+(a.length===1?' group':' groups');
+ $('#grid').innerHTML=a.length?a.map(card).join(''):`<div class="empty"><h3>${S.tab==='mine'?'You have no groups yet':'No groups match these filters'}</h3><p>${S.tab==='mine'?'Create a group or request to join one from Discover.':'Clear a filter or create the group you are looking for.'}</p></div>`;
+}
+function badge(g){if(isLead(g)){const p=g.members.filter(x=>x.status==='pending').length;return `<span class="chip ok">You lead this${p?' · '+p+' pending':''}</span>`}
+ const mm=myMem(g);if(!mm)return'';return mm.status==='approved'?'<span class="chip ok">Joined</span>':mm.status==='pending'?'<span class="chip warn">Request pending</span>':'<span class="chip bad">Declined</span>'}
+function card(g){const n=seats(g);
+ return `<div class="card" tabindex="0" role="button" data-act="open" data-id="${g.id}">
+ <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><span class="chip">${esc(g.subject)}</span>${badge(g)}</div>
+ <h3>${esc(g.title)}</h3><p>${esc(g.desc)}</p>
+ <div class="line">🕒 <span>${esc(when(g))}</span></div>
+ <div class="line">📍 <span>${esc(g.mode)}: ${isUrl(g.location)?'Meeting link':esc(g.location)}</span></div>
+ <div class="foot"><span>Led by ${esc(g.creator.name)}</span><b style="color:${n>0?'var(--ok)':'var(--bad)'}">${n>0?n+' seat'+(n>1?'s':'')+' left':'Full'}</b></div></div>`}
+
+function open(html){$('#sheet').innerHTML=html;$('#ov').classList.add('on');$('#sheet').scrollTop=0;const f=$('#sheet input,#sheet button');f&&f.focus()}
+function close(){$('#ov').classList.remove('on');if(location.hash)history.replaceState(null,'',location.pathname+location.search)}
+const closeBtn='<button class="btn g sm x" data-act="close" aria-label="Close">Close</button>';
+
+function bellPanel(){const a=myNotes();
+ open(`${closeBtn}<h2>Notifications</h2>${a.length?a.map(n=>`<button class="nt ${n.read?'':'u'}" data-act="note" data-id="${n.gid}">${esc(n.text)}<small>${ago(n.at)}</small></button>`).join(''):'<p class="note">Nothing yet. You will see join requests here if you lead a group, and approval updates if you have asked to join one.</p>'}`);
+ a.forEach(n=>n.read=true);save();auth()}
+let after=null;
+function signin(cb){after=cb||null;let meth='Google';
+ const draw=()=>{const guest=meth==='Guest';
+ open(`${closeBtn}<h2>Sign in</h2><p class="note">Choose how you want to sign in. This is a demo sign-in, so your details stay on this device.</p>
+ <div class="methods" style="margin-top:12px">${['Google','Microsoft','Email','Guest'].map(x=>`<button type="button" class="btn" data-act="meth" data-v="${x}" aria-pressed="${x===meth}">${x==='Email'?'Email':x==='Guest'?'Guest':'Continue with '+x}</button>`).join('')}</div>
+ <form id="siF"><label for="sn">Full name</label><input class="in" id="sn" required>
+ ${guest?'':'<label for="se">'+(meth==='Email'?'Email':meth+' email')+'</label><input class="in" id="se" type="email" required>'}
+ <div class="two"><div><label for="sc">Course</label><input class="in" id="sc" placeholder="e.g. B.Tech CSE"></div><div><label for="sy">Year</label><select class="in" id="sy">${['1st year','2nd year','3rd year','4th year','Postgraduate'].map(y=>`<option>${y}</option>`).join('')}</select></div></div>
+ <button class="btn p" style="width:100%;margin-top:16px">Sign in</button></form>`)};
+ signin.set=m=>{meth=m;draw()};signin.get=()=>meth;draw()}
+
+function detail(id){const g=S.groups.find(x=>x.id===id);if(!g){toast('That group was not found on this device.');return}
+ const lead=isLead(g),mm=myMem(g),n=seats(g),ap=g.members.filter(m=>m.status==='approved'),pend=g.members.filter(m=>m.status==='pending');
+ const guestMail=e=>/@guest\.local$/.test(e)?'Guest':e;
+ let act='';
+ if(lead)act='<p class="note">You are the leader of this group.</p>';
+ else if(mm)act=`<p><b>Your request:</b> ${mm.status==='approved'?'<span class="chip ok">Approved. You are in.</span>':mm.status==='pending'?'<span class="chip warn">Waiting for the leader to approve</span>':'<span class="chip bad">Declined by the leader</span>'}</p>`;
+ else if(n<=0)act='<p><span class="chip bad">This group is full</span></p>';
+ else if(!S.user)act='<button class="btn p" data-act="signin-join" data-id="'+g.id+'">Sign in to request to join</button>';
+ else act=`<form id="jF" data-id="${g.id}"><p class="note">The leader will see: <b>${esc(S.user.name)}</b>, ${esc(S.user.course||'course not set')}, ${esc(S.user.year||'')}${/@guest\.local$/.test(S.user.email)?'':', '+esc(S.user.email)}.</p>
+ <label for="jm">Message to the leader (optional)</label><textarea class="in" id="jm" rows="3" placeholder="What do you want to cover? Which topics are you stuck on?"></textarea><button class="btn p" style="margin-top:10px">Request to join</button></form>`;
+ const reqs=lead&&pend.length?`<div class="sec"><h3>Requests to review (${pend.length})</h3>${pend.map(m=>`<div class="req"><div class="mem"><span class="av">${esc(ini(m.name))}</span><div><b>${esc(m.name)}</b><br><span class="note">${esc(m.course||'')} · ${esc(m.year||'')} · ${esc(guestMail(m.email))}</span></div></div>${m.msg?`<p style="margin:4px 0 8px">“${esc(m.msg)}”</p>`:''}<button class="btn p sm" data-act="ok" data-id="${g.id}" data-e="${esc(m.email)}">Approve</button> <button class="btn g sm" data-act="no" data-id="${g.id}" data-e="${esc(m.email)}">Decline</button></div>`).join('')}</div>`:'';
+ const c=g.creator;
+ open(`${closeBtn}<span class="chip">${esc(g.subject)}</span><h2 style="margin-top:8px">${esc(g.title)}</h2><p style="color:var(--muted);margin:6px 0 0">${esc(g.desc)}</p>
+ <div class="sec"><h3>When and where</h3><div class="line">🕒 <span>${esc(when(g))}</span></div>
+ <div class="line" style="margin-top:6px">📍 <span>${esc(g.mode)}: ${isUrl(g.location)?`<a href="${esc(g.location)}" target="_blank" rel="noopener noreferrer">Open meeting link</a>`:`${esc(g.location)} · <a href="${mapLink(g.location)}" target="_blank" rel="noopener noreferrer">View on map</a>`}</span></div>
+ <div class="line" style="margin-top:6px">👥 <span>${n>0?n+' of '+g.cap+' seats open':'Full'}</span></div></div>
+ <div class="sec"><h3>Group leader</h3><div class="mem"><span class="av">${esc(ini(c.name))}</span><div><b>${esc(c.name)}</b><br><span class="note">${esc(c.course)} · ${esc(c.year)}</span></div></div>${c.bio?`<p style="margin:4px 0 0">${esc(c.bio)}</p>`:''}${lead||(mm&&mm.status==='approved')?`<p class="note">Contact: ${esc(guestMail(c.email))}</p>`:'<p class="note">Contact details are shown once you are approved.</p>'}</div>
+ <div class="sec"><h3>Members (${ap.length+1})</h3><div class="mem"><span class="av">${esc(ini(c.name))}</span><span>${esc(c.name)} <span class="chip">Leader</span></span></div>${ap.map(m=>`<div class="mem"><span class="av">${esc(ini(m.name))}</span><span>${esc(m.name)}<br><span class="note">${esc(m.course||'')} · ${esc(m.year||'')}</span></span></div>`).join('')}</div>
+ ${reqs}
+ <div class="sec"><h3>Direct invite link</h3><div class="invite"><input class="in" id="il" readonly value="${esc(inviteLink(g))}" aria-label="Invite link"><button class="btn p" data-act="copy" data-id="${g.id}">Copy</button></div><p class="note">Anyone with the link lands on this group and can request to join. Groups are saved on this device in this demo, so the link opens here.</p></div>
+ <div class="sec"><h3>Join this group</h3>${act}</div>`)}
+
+function createForm(){open(`${closeBtn}<h2>Create a study group</h2><p class="note">You will be the group leader and approve who joins.</p>
+ <form id="cF"><label for="ct">Group title</label><input class="in" id="ct" required maxlength="70" placeholder="e.g. Linear algebra weekly review">
+ <label for="cs">Subject</label><select class="in" id="cs">${SUBJ.map(s=>`<option>${s}</option>`).join('')}</select>
+ <label for="cd">What will you study?</label><textarea class="in" id="cd" rows="3" required maxlength="300"></textarea>
+ <label>Days</label><div class="days">${DAYS.map(d=>`<label><input type="checkbox" name="day" value="${d}"> ${d}</label>`).join('')}</div>
+ <div class="two"><div><label for="c1">Starts</label><input class="in" id="c1" type="time" value="18:00" required></div><div><label for="c2">Ends</label><input class="in" id="c2" type="time" value="19:30" required></div></div>
+ <div class="two"><div><label for="cm">Format</label><select class="in" id="cm"><option>In person</option><option>Online</option></select></div><div><label for="cp">Seats (including you)</label><input class="in" id="cp" type="number" min="2" max="50" value="6" required></div></div>
+ <label for="cl">Venue and city, or meeting link</label><input class="in" id="cl" required placeholder="Library Room 3, Hyderabad, or https://meet…">
+ <label for="cb">About you (shown to joiners)</label><input class="in" id="cb" maxlength="120" placeholder="e.g. Aced this course last year">
+ <button class="btn p" style="width:100%;margin-top:16px">Create group</button></form>`)}
+
+document.addEventListener('click',e=>{
+ if(e.target.id==='ov'){close();return}
+ const t=e.target.closest('[data-act]');if(!t)return;const a=t.dataset.act,id=t.dataset.id;
+ if(a==='tab'){S.tab=t.dataset.v;document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected',b===t));if(S.tab==='mine'&&!S.user){signin(()=>{list()});}list()}
+ else if(a==='open'){history.replaceState(null,'','#g='+id);detail(id)}
+ else if(a==='close')close();
+ else if(a==='signin')signin();
+ else if(a==='bell')bellPanel();
+ else if(a==='note'){history.replaceState(null,'','#g='+id);detail(id)}
+ else if(a==='signout'){S.user=null;save();auth();list();toast('Signed out')}
+ else if(a==='meth')signin.set(t.dataset.v);
+ else if(a==='signin-join')signin(()=>detail(id));
+ else if(a==='create'){S.user?createForm():signin(createForm)}
+ else if(a==='copy'){const g=S.groups.find(x=>x.id===id),inp=$('#il');
+  (navigator.clipboard?navigator.clipboard.writeText(inviteLink(g)):Promise.reject()).then(()=>toast('Invite link copied')).catch(()=>{inp.select();toast('Press Ctrl+C to copy')})}
+ else if(a==='ok'||a==='no'){const g=S.groups.find(x=>x.id===id),m=g.members.find(x=>x.email===t.dataset.e);
+  if(a==='ok'&&seats(g)<=0){toast('The group is full');return}
+  m.status=a==='ok'?'approved':'declined';notify(m.email,a==='ok'?'Your request to join "'+g.title+'" was approved':'Your request to join "'+g.title+'" was declined',g.id);save();list();detail(id);toast(a==='ok'?m.name+' approved':m.name+' declined')}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')close();if((e.key==='Enter'||e.key===' ')&&e.target.classList.contains('card')){e.preventDefault();e.target.click()}});
+document.addEventListener('submit',e=>{e.preventDefault();const f=e.target;
+ if(f.id==='siF'){const v=id=>($('#'+id)||{}).value||'';S.user={name:v('sn').trim(),email:(v('se').trim()||'guest-'+Math.random().toString(36).slice(2,8)+'@guest.local').toLowerCase(),course:v('sc').trim(),year:v('sy'),provider:signin.get()};save();auth();list();toast(unread()?'Signed in. You have '+unread()+' new notification'+(unread()>1?'s':''):'Signed in as '+S.user.name);const cb=after;after=null;cb?cb():close()}
+ else if(f.id==='jF'){const g=S.groups.find(x=>x.id===f.dataset.id),u=S.user;g.members.push({name:u.name,email:u.email,course:u.course,year:u.year,msg:$('#jm').value.trim(),status:'pending'});notify(g.creator.email,u.name+' requested to join "'+g.title+'"',g.id);save();list();detail(g.id);toast('Request sent to '+g.creator.name)}
+ else if(f.id==='cF'){const days=[...f.querySelectorAll('[name=day]:checked')].map(x=>x.value);if(!days.length){toast('Pick at least one day');return}
+  const u=S.user,g={id:'g'+Date.now().toString(36),title:$('#ct').value.trim(),subject:$('#cs').value,desc:$('#cd').value.trim(),days,start:$('#c1').value,end:$('#c2').value,mode:$('#cm').value,location:$('#cl').value.trim(),cap:+$('#cp').value,created:Date.now(),creator:{name:u.name,email:u.email,course:u.course||'Course not set',year:u.year,bio:$('#cb').value.trim()},members:[]};
+  S.groups.unshift(g);save();S.tab='all';document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected',b.dataset.v==='all'));list();history.replaceState(null,'','#g='+g.id);detail(g.id);toast('Group created')}
+});
+$('#fs').innerHTML='<option value="">All subjects</option>'+SUBJ.map(s=>`<option>${s}</option>`).join('');
+$('#fd').innerHTML='<option value="">Any day</option>'+DAYS.map(s=>`<option>${s}</option>`).join('');
+['q','fs','fd','fm','fo','fa'].forEach(i=>$('#'+i).addEventListener(i==='q'?'input':'change',list));
+const hash=()=>{const m=location.hash.match(/^#g=(.+)$/);if(m)detail(decodeURIComponent(m[1]))};
+window.addEventListener('hashchange',hash);
+auth();list();hash();
+</script>
+</body>
+</html>
