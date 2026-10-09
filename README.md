@@ -2,7 +2,7 @@
 
 A web prototype where students create study groups by subject and timing. Members request to join, and the group leader approves.
 
-**Live demo:**
+Live demo:https://roshinimacha06.github.io/study-group-finder/
 
 ## Features
 
